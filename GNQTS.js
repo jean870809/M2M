@@ -329,7 +329,16 @@ function countFunds(year, month) {
         neg_stock.reverse();
 
         var dataset2 = [];  //趨勢值排序
-        for (var j = 0; j < stock.length; j++) {
+        dataset2.push({
+            label: "best : " + best_answer.company_name,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            data: [best_answer.trend],
+            yAxisID: 'y-axis-1',
+        });
+        var rank = 1;
+        for (var j = 0; j < stock.length; j++) { //趨勢值正
             dataset2.push({
                 label: stock[j].company_name,
                 backgroundColor: getbdcolor(),
@@ -340,8 +349,8 @@ function countFunds(year, month) {
             });
         }
 
-        for (var j = 0; j < neg_stock.length; j++) {
-            dataset2.push({
+        for (var j = 0; j < neg_stock.length; j++) { // 趨勢值負
+                dataset2.push({
                 label: neg_stock[j].company_name,
                 backgroundColor: getbgcolor(),
                 borderColor: getbdcolor(),
@@ -351,14 +360,7 @@ function countFunds(year, month) {
             });
         }
 
-        dataset2.push({
-            label: "best : " + best_answer.company_name,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            data: [best_answer.trend],
-            yAxisID: 'y-axis-1',
-        });
+
 
 
         var barChartData = {
@@ -383,19 +385,11 @@ function countFunds(year, month) {
                         type: 'linear',
                         display: true,
                         position: 'left',
-                        ticks: {
-                            min: -3,
-                            max: 3,
-                        },
                         id: 'y-axis-1',
                     }, {
                         type: 'linear',
                         display: true,
                         position: 'right',
-                        ticks: {
-                            min: -2000000000,
-                            max: 2000000000,
-                        },
                         id: 'y-axis-2',
                         // grid line settings
                         gridLines: {
