@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>M2M</title>
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+    <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="GNQTS.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="col-md-7">
+            choose train file (2009-12~2019-11)
+            <input type='text' id='datepicker' class='datepicker form-control' name='setuptime' value=''>
+        </div>
+        <div id="tab-demo">
+            <ul class="tab-title">
+                <li><a href="#tab01">資金水位</a></li>
+                <li><a href="#tab02">趨勢值排序</a></li>
+                <li><a href="#tab03">GNQTS</a></li>
+            </ul>
+            <div id="tab01" class="tab-inner">
+                <canvas id="myChart" width="40vh" height="20vh"></canvas>
+            </div>
+            <div id="tab02" class="tab-inner">
+                <canvas id="myChart1" width="40vh" height="20vh"></canvas>
+            </div>
+            <div id="tab03" class="tab-inner">
+                <canvas id="myChart2" width="40vh" height="20vh"></canvas>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
