@@ -19,7 +19,7 @@ $(function () { //tab
     });
 });
 $(function () { //datepicker
-    var parseIn;
+    //var parseIn;
     var year;
     $("#datepicker").datepicker({
         changeMonth: true,
@@ -36,15 +36,15 @@ $(function () { //datepicker
             var month = $("#ui-datepicker-div .ui-datepicker-month option:selected").val(); //得到選則的月份值
             //增加0判斷
             var parseIntok = parseInt(month) + 1;
-            if (parseIntok < 10) {
+            /*if (parseIntok < 10) {
                 parseIn = '0' + parseIntok;
             } else {
                 parseIn = parseIntok;
-            }
+            }*/
             year = $("#ui-datepicker-div .ui-datepicker-year option:selected").val(); //得到選則的年份值
-            $('#datepicker').val(year + '-' + parseIn); //给input赋值，其中要對月值加1才是實際的月份
-            console.log(year, parseIn);
-            countFunds(year, parseIn);
+            $('#datepicker').val(year + '-' + parseIntok); //给input赋值，其中要對月值加1才是實際的月份
+            console.log(year, parseIntok);
+            countFunds(year, parseIntok);
         }
     });
 });
@@ -136,12 +136,42 @@ function countFunds(year, month) {
             document.getElementById("tab_f").innerHTML="GNQTS";
             break;
     }
+    TRAINTYPE = document.getElementById("train_list").value;
+    console.log(TRAINTYPE);
+    console.log(month);
+    switch (TRAINTYPE) {
+        case "Y2Y":
+            var csv = 'DJI_30/Y2Y/train_' + year + '(' + year + ' Q1).csv';
+            break;
+    
+        case "Q2Q":
+            if(month == 1 || month == 2 || month == 3){ //Q1
+                console.log("Q1");
+                var csv = 'DJI_30/Q2Q/train_' + year +'_Q1'+ '(' + year + ' Q1).csv';
+            }else if(month == 4 || month == 5 || month == 6){ //Q2
+                console.log("Q2");
+                var csv = 'DJI_30/Q2Q/train_' + year +'_Q2'+ '(' + year + ' Q1).csv';
+            }else if(month == 7 || month == 8 || month == 9){ //Q3
+                console.log("Q3");
+                var csv = 'DJI_30/Q2Q/train_' + year +'_Q3'+ '(' + year + ' Q1).csv';
+            }else{ //Q4
+                console.log("Q4");
+                var csv = 'DJI_30/Q2Q/train_' + year +'_Q4'+ '(' + year + ' Q1).csv';
+            }
+            break;
+        case "M2M":
+            if (month < 10) {
+                month = '0' + month;
+            }
+            var csv = 'DJI_30/M2M/train_' + year + '_' + month + '(' + year + ' Q1).csv';
+            break;
+    }
+
     DELTA = 0.0004;
     RUNTIMES = 10000;
     var c = 30;
     s_company = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
     COMPANYNUMBER = c;
-    var csv = 'DJI_30/M2M/train_' + year + '_' + month + '(' + year + ' Q1).csv';
     d3.csv(csv, function (d) {
         data = d;
         console.log(d);
@@ -338,6 +368,11 @@ function countFunds(year, month) {
                     yAxes: [{
                         display: true
                     }]
+                }, 
+                title: {
+                    display: true,
+                    text: '資金水位',
+                    fontSize:16
                 },
             }
         });
@@ -353,14 +388,13 @@ function countFunds(year, month) {
 
         neg_stock.reverse();
 
-        var dataset2 = [];  //趨勢值排序
+        var dataset2 = [];  //趨勢值正排序
         dataset2.push({
             label: "best : " + best_answer.company_name,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1,
             data: [best_answer.trend],
-            yAxisID: 'y-axis-1',
         });
         var rank = 1;
         for (var j = 0; j < stock.length; j++) { //趨勢值正
@@ -370,33 +404,33 @@ function countFunds(year, month) {
                 borderColor: getbdcolor(),
                 borderWidth: 1,
                 data: [stock[j].trend],
-                yAxisID: 'y-axis-1',
             });
         }
-
+        var dataset2_1 = []; //趨勢值負排序
         for (var j = 0; j < neg_stock.length; j++) { // 趨勢值負
-            dataset2.push({
+            dataset2_1.push({
                 label: neg_stock[j].company_name,
                 backgroundColor: getbgcolor(),
                 borderColor: getbdcolor(),
                 borderWidth: 1,
                 data: [neg_stock[j].trend],
-                yAxisID: 'y-axis-2',
             });
         }
 
 
 
 
-        var barChartData = {
+        var barChartData2 = {   //趨勢值正
             datasets: dataset2,
         };
         $('#myChart1').remove();
-        $('#tab02').append('<canvas id="myChart1" width="40vh" height="20vh"></canvas>');
+        $('#myChart1-1').remove();
+        $('#tab02').append('<canvas id="myChart1" width="20vh" height="20vh"></canvas><canvas id="myChart1-1" width="20vh" height="20vh"></canvas>');
+
         var ctx1 = document.getElementById('myChart1');
         bar_chart = new Chart(ctx1, {
             type: 'bar',
-            data: barChartData,
+            data: barChartData2,
             options: {
                 responsive: true,
                 legend: {
@@ -407,22 +441,43 @@ function countFunds(year, month) {
                         display: true
                     }],
                     yAxes: [{
-                        type: 'linear',
                         display: true,
-                        position: 'left',
-                        id: 'y-axis-1',
-                    }, {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        id: 'y-axis-2',
-                        // grid line settings
-                        gridLines: {
-                            drawOnChartArea: false, // only want the grid lines for one axis to show up
-                        },
                     }]
                 },
+                title: {
+                    display: true,
+                    text: '趨勢值正',
+                    fontSize:16
+                },
+            }
+        });
 
+        var barChartData2_1 = {   //趨勢值負
+            datasets: dataset2_1,
+        };
+
+        var ctx1_1 = document.getElementById('myChart1-1');
+        bar_chart = new Chart(ctx1_1, {
+            type: 'bar',
+            data: barChartData2_1,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true
+                    }],
+                    yAxes: [{
+                        display: true,
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: '趨勢值負',
+                    fontSize:16
+                },
             }
         });
 
@@ -503,7 +558,11 @@ function countFunds(year, month) {
                         },
                     }]
                 },
-
+                title: {
+                    display: true,
+                    text: QTSTYPE,
+                    fontSize:16
+                },
             }
         });
 

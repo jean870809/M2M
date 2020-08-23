@@ -24,6 +24,11 @@
                 <option value = "GNQTS" selected>GNQTS</option>
             </select>
             <br>
+            <select name = "train" id = "train_list">
+                <option value = "Y2Y">Y2Y</option>
+                <option value = "Q2Q">Q2Q</option>
+                <option value = "M2M" selected>M2M</option>
+            </select>
             choose train file (2009-12~2019-11)
             <input type='text' id='datepicker' class='datepicker form-control' name='setuptime' value=''> 
         </div>
@@ -37,7 +42,8 @@
                 <canvas id="myChart" width="40vh" height="20vh"></canvas>
             </div>
             <div id="tab02" class="tab-inner">
-                <canvas id="myChart1" width="40vh" height="20vh"></canvas>
+                <canvas id="myChart1" width="20vh" height="20vh"></canvas>
+                <canvas id="myChart1-1" width="20vh" height="20vh"></canvas>
             </div>
             <div id="tab03" class="tab-inner">
                 <canvas id="myChart2" width="40vh" height="20vh"></canvas>
