@@ -17,15 +17,21 @@
 
 <body>
     <div class="main">
-        <div class="col-md-7">
+        <div class="start">
+            <select name = "qts" id = "qts_list">
+                <option value = "QTS">QTS</option>
+                <option value = "GQTS">GQTS</option>
+                <option value = "GNQTS" selected>GNQTS</option>
+            </select>
+            <br>
             choose train file (2009-12~2019-11)
-            <input type='text' id='datepicker' class='datepicker form-control' name='setuptime' value=''>
+            <input type='text' id='datepicker' class='datepicker form-control' name='setuptime' value=''> 
         </div>
         <div id="tab-demo">
             <ul class="tab-title">
                 <li><a href="#tab01">資金水位</a></li>
                 <li><a href="#tab02">趨勢值排序</a></li>
-                <li><a href="#tab03">GNQTS</a></li>
+                <li><a href="#tab03" id = "tab_f">GNQTS</a></li>
             </ul>
             <div id="tab01" class="tab-inner">
                 <canvas id="myChart" width="40vh" height="20vh"></canvas>

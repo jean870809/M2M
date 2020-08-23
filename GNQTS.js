@@ -24,7 +24,7 @@ $(function () { //datepicker
     $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: true,
-        yearRange : "2009:2019",
+        yearRange: "2009:2019",
         showButtonPanel: true, // 顯示介面
         showMonthAfterYear: true, // 月份顯示在年後面
         dateFormat: 'yy-mm',
@@ -48,19 +48,12 @@ $(function () { //datepicker
         }
     });
 });
-function read_csv(year, month) {
-    var csv = 'DJI_30/M2M/train_' + year + '_' + month + '(' + year + ' Q1).csv';
-    d3.csv(csv, function (d) {
-        data = d;
-        console.log(d);
-    });
-}
 
 function STOCK() {
     this.data = [];
     this.investment_number = [];
     this.company_name = "",
-    this.totalMoney = [];
+        this.totalMoney = [];
     this.fs = [];
     this.locate = [];
     this.dMoney = 0;
@@ -74,11 +67,11 @@ function STOCK() {
     this.day = 0;
     this.Y = 0;
     this.y_line = [];
-    this.Y_line = function() {
+    this.Y_line = function () {
         this.Y = this.m * this.day + FUNDS;
         this.y_line.push(this.Y);
     };
-    this.init = function() {
+    this.init = function () {
         for (var j = 0; j < this.counter; j++) {
             this.fs[j] = [];
         }
@@ -130,6 +123,19 @@ function countTrend(stock) {
     return stock;
 }
 function countFunds(year, month) {
+    QTSTYPE = document.getElementById("qts_list").value;
+    console.log(QTSTYPE);
+    switch (QTSTYPE){
+        case "QTS":
+            document.getElementById("tab_f").innerHTML="QTS";
+            break;
+        case "GQTS":
+            document.getElementById("tab_f").innerHTML="GQTS";
+            break;
+        case "GNQTS":
+            document.getElementById("tab_f").innerHTML="GNQTS";
+            break;
+    }
     DELTA = 0.0004;
     RUNTIMES = 10000;
     var c = 30;
@@ -217,9 +223,9 @@ function countFunds(year, month) {
             }
             if (best_answer.trend < good_answer.trend) {
                 best_answer = good_answer;
-                console.log("i=", i);
-                console.log(best_answer.counter);
-                console.log(best_answer.trend);
+                //console.log("i=", i);
+                //console.log(best_answer.counter);
+                //console.log(best_answer.trend);
             }
 
             if (worst_answer.trend > bad_answer.trend) {
@@ -227,23 +233,42 @@ function countFunds(year, month) {
             }
 
             for (var j = 0; j < COMPANYNUMBER; j++) {
-                if (best_answer.data[j] > bad_answer.data[j]) {
-                    if (change_number[j] < 0.5) {
-                        change_number[j] = 1 - change_number[j];
-                    }
-                    change_number[j] += DELTA;
-                } else
-                    if (best_answer.data[j] < bad_answer.data[j]) {
-                        if (change_number[j] > 0.5) {
-                            change_number[j] = 1 - change_number[j];
+                switch (QTSTYPE) {
+                    case "QTS":
+                        if (good_answer.data[j] > bad_answer.data[j]) {
+                            change_number[j] += DELTA;
+                        } else if (good_answer.data[j] < bad_answer.data[j]) {
+                            change_number[j] -= DELTA;
                         }
-                        change_number[j] -= DELTA;
-                    }
+                        break;
+
+                    case "GQTS":
+                        if (best_answer.data[j] > bad_answer.data[j]) {
+                            change_number[j] += DELTA;
+                        } else if (best_answer.data[j] < bad_answer.data[j]) {
+                            change_number[j] -= DELTA;
+                        }
+                        break;
+
+                    case "GNQTS":
+                        if (best_answer.data[j] > bad_answer.data[j]) {
+                            if (change_number[j] < 0.5) {
+                                change_number[j] = 1 - change_number[j];
+                            }
+                            change_number[j] += DELTA;
+                        } else if (best_answer.data[j] < bad_answer.data[j]) {
+                            if (change_number[j] > 0.5) {
+                                change_number[j] = 1 - change_number[j];
+                            }
+                            change_number[j] -= DELTA;
+                        }
+                        break;
+                }
             }
         }
 
 
-        console.log(best_answer.counter);
+        //console.log(best_answer.counter);
         var best_name = "";
         for (var j = 0; j < best_answer.counter; j++) {
             best_name += company_name[best_answer.locate[j]];
@@ -293,8 +318,8 @@ function countFunds(year, month) {
             datasets: dataset,
         }
         $('#myChart').remove();
-        $('#tab01').append('<canvas id="myChart" width="40vh" height="20vh"></canvas>');  
-        var ctx = document.getElementById('myChart');  
+        $('#tab01').append('<canvas id="myChart" width="40vh" height="20vh"></canvas>');
+        var ctx = document.getElementById('myChart');
         line_chart = new Chart(ctx, {
             type: 'line',
             data: lineChartData,
@@ -350,7 +375,7 @@ function countFunds(year, month) {
         }
 
         for (var j = 0; j < neg_stock.length; j++) { // 趨勢值負
-                dataset2.push({
+            dataset2.push({
                 label: neg_stock[j].company_name,
                 backgroundColor: getbgcolor(),
                 borderColor: getbdcolor(),
@@ -368,7 +393,7 @@ function countFunds(year, month) {
         };
         $('#myChart1').remove();
         $('#tab02').append('<canvas id="myChart1" width="40vh" height="20vh"></canvas>');
-        var ctx1 = document.getElementById('myChart1');    
+        var ctx1 = document.getElementById('myChart1');
         bar_chart = new Chart(ctx1, {
             type: 'bar',
             data: barChartData,
@@ -444,8 +469,8 @@ function countFunds(year, month) {
             yAxisID: 'y-axis-2',
         });
         $('#myChart2').remove();
-        $('#tab03').append('<canvas id="myChart2" width="40vh" height="20vh"></canvas>'); 
-        var ctx2 = document.getElementById('myChart2');   
+        $('#tab03').append('<canvas id="myChart2" width="40vh" height="20vh"></canvas>');
+        var ctx2 = document.getElementById('myChart2');
         var best_line_chart = new Chart(ctx2, {
             type: 'line',
             data: bestLineChartData,
