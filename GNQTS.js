@@ -138,24 +138,25 @@ function countFunds(year, month) {
     }
     TRAINTYPE = document.getElementById("train_list").value;
     console.log(TRAINTYPE);
-    console.log(month);
+    var chart_title;
     switch (TRAINTYPE) {
         case "Y2Y":
+            chart_title = year;
             var csv = 'DJI_30/Y2Y/train_' + year + '(' + year + ' Q1).csv';
             break;
     
         case "Q2Q":
             if(month == 1 || month == 2 || month == 3){ //Q1
-                console.log("Q1");
+                chart_title = year+"_Q1";
                 var csv = 'DJI_30/Q2Q/train_' + year +'_Q1'+ '(' + year + ' Q1).csv';
             }else if(month == 4 || month == 5 || month == 6){ //Q2
-                console.log("Q2");
+                chart_title = year+"_Q2";
                 var csv = 'DJI_30/Q2Q/train_' + year +'_Q2'+ '(' + year + ' Q1).csv';
             }else if(month == 7 || month == 8 || month == 9){ //Q3
-                console.log("Q3");
+                chart_title = year+"_Q3";
                 var csv = 'DJI_30/Q2Q/train_' + year +'_Q3'+ '(' + year + ' Q1).csv';
             }else{ //Q4
-                console.log("Q4");
+                chart_title = year+"_Q4";
                 var csv = 'DJI_30/Q2Q/train_' + year +'_Q4'+ '(' + year + ' Q1).csv';
             }
             break;
@@ -163,6 +164,7 @@ function countFunds(year, month) {
             if (month < 10) {
                 month = '0' + month;
             }
+            chart_title = year + "_" + month;
             var csv = 'DJI_30/M2M/train_' + year + '_' + month + '(' + year + ' Q1).csv';
             break;
     }
@@ -371,7 +373,7 @@ function countFunds(year, month) {
                 }, 
                 title: {
                     display: true,
-                    text: '資金水位',
+                    text: chart_title+'_資金水位',
                     fontSize:16
                 },
             }
@@ -446,7 +448,7 @@ function countFunds(year, month) {
                 },
                 title: {
                     display: true,
-                    text: '趨勢值正',
+                    text: chart_title+'_正趨勢值',
                     fontSize:16
                 },
             }
@@ -475,7 +477,7 @@ function countFunds(year, month) {
                 },
                 title: {
                     display: true,
-                    text: '趨勢值負',
+                    text: chart_title+'_負趨勢值',
                     fontSize:16
                 },
             }
@@ -560,7 +562,7 @@ function countFunds(year, month) {
                 },
                 title: {
                     display: true,
-                    text: QTSTYPE,
+                    text: chart_title+"_"+QTSTYPE,
                     fontSize:16
                 },
             }
